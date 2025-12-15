@@ -10,20 +10,16 @@ char player2 = 'O';
 
 void drawBoard(char board[3][3]); 
 int checkWin(char board[3][3]); 
-void playerMove(char board[3][3], char &playerSymbol);
+void playerMove(char board[3][3], char playerSymbol);
 int minimax(char board[3][3], int depth, bool isMaximizing, bool firstTime);
 void computerMove(char board[3][3], char computerSymbol, int difficulty);
 void chooseMode(char board[3][3], int mode, int difficulty);
-
-
-
 
 
 int main(){
     
     srand(time(0));
     char replay;
-
     do{
         int mode;
         int difficulty;
@@ -129,7 +125,7 @@ int checkWin(char board[3][3]){
     else return 1;
 }
 
-void playerMove(char board[3][3], char &playerSymbol){
+void playerMove(char board[3][3], char playerSymbol){
     int place;
     int row, col;
     cout << "Enter the place to play: ";
