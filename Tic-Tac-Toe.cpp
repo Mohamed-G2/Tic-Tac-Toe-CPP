@@ -9,10 +9,10 @@ char player1 = 'X';
 char player2 = 'O';
 
 void drawBoard(char board[3][3]); 
-int checkWin(char board[3][3], int mode); 
+int checkWin(char board[3][3]); 
 void playerMove(char board[3][3], char &playerSymbol);
-int minimax(char board[3][3], int depth, bool isMaximizing, int mode, bool firstTime);
-void computerMove(char board[3][3], char computerSymbol, int difficulty, int mode);
+int minimax(char board[3][3], int depth, bool isMaximizing, bool firstTime);
+void computerMove(char board[3][3], char computerSymbol, int difficulty);
 void chooseMode(char board[3][3], int mode, int difficulty);
 
 
@@ -23,6 +23,7 @@ int main(){
     
     srand(time(0));
     char replay;
+
     do{
         int mode;
         int difficulty;
@@ -90,7 +91,7 @@ void drawBoard(char board[3][3]){
     cout << "     |     |     "<< endl << endl;
 }
 
-int checkWin(char board[3][3], int mode){
+int checkWin(char board[3][3]){
 
     //Rows
     for (int i = 0; i < 3; i++) {
@@ -146,8 +147,8 @@ void playerMove(char board[3][3], char &playerSymbol){
     board[row][col] = playerSymbol;
 }
 
-int minimax(char board[3][3], int depth, bool isMaximizing, int mode, bool firstTime = true){
-    int result = checkWin(board, mode);
+int minimax(char board[3][3], int depth, bool isMaximizing, bool firstTime = true){
+    int result = checkWin(board);
     if (depth == 0 || result != 1)
         return result;
     if(isMaximizing){
@@ -158,7 +159,7 @@ int minimax(char board[3][3], int depth, bool isMaximizing, int mode, bool first
                 if(board[i][j] != 'X' && board[i][j] != 'O'){
                     temp = board[i][j];
                     board[i][j] = 'X';
-                    int score = minimax(board, depth - 1, false, mode, false);
+                    int score = minimax(board, depth - 1, false, false);
                     board[i][j] = temp;
                     finalscore = max(score, finalscore);
                 }
@@ -174,7 +175,7 @@ int minimax(char board[3][3], int depth, bool isMaximizing, int mode, bool first
                 if(board[i][j] != 'X' && board[i][j] != 'O'){
                     temp = board[i][j];
                     board[i][j] = 'O';
-                    int score = minimax(board, depth - 1, true, mode, false);
+                    int score = minimax(board, depth - 1, true, false);
                     board[i][j] = temp;
                     if(score < finalscore){
                         finalscore = score;
@@ -191,7 +192,7 @@ int minimax(char board[3][3], int depth, bool isMaximizing, int mode, bool first
     }
 }
 
-void computerMove(char board[3][3], char computerSymbol, int difficulty, int mode){
+void computerMove(char board[3][3], char computerSymbol, int difficulty){
     char temp;
     if(difficulty == 1){
         for (int i = 0; i < 3; i++){
@@ -199,7 +200,7 @@ void computerMove(char board[3][3], char computerSymbol, int difficulty, int mod
                 if(board[i][j] != 'X' && board[i][j] != 'O'){
                     temp = board[i][j];
                     board[i][j] = 'O';
-                    if (checkWin(board, mode) == -2){
+                    if (checkWin(board) == -2){
                         board[i][j] = 'O';
                         return;
                     }
@@ -213,7 +214,7 @@ void computerMove(char board[3][3], char computerSymbol, int difficulty, int mod
                 if(board[i][j] != 'X' && board[i][j] != 'O'){
                     temp = board[i][j];
                     board[i][j] = 'X';
-                    if (checkWin(board, mode) == 2){
+                    if (checkWin(board) == 2){
                         board[i][j] = 'O';
                         return;
                     }
@@ -232,7 +233,7 @@ void computerMove(char board[3][3], char computerSymbol, int difficulty, int mod
     
         board[row][col] = 'O';
     } else{
-        minimax(board, 100, false, mode, true);
+        minimax(board, 100, false, true);
     }
 
 }
@@ -250,11 +251,11 @@ void chooseMode(char board[3][3], int mode, int difficulty){
                 playerMove(board, player2);
             }
             else
-                computerMove(board, player2, difficulty, mode);
+                computerMove(board, player2, difficulty);
         }    
         drawBoard(board);
         if (i >= 4){
-            int winResult = checkWin(board, mode);
+            int winResult = checkWin(board);
             if (winResult == 2){
                 if (mode == 2){
                     cout << "\n*** You Won! ***\n"; 
